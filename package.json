@@ -1,0 +1,58 @@
+{
+  "name": "data-push-manage",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "bootstrap": "pnpm install",
+    "clean": "rimraf node_modules",
+    "dev": "vue-cli-service serve --mode development",
+    "build": "vue-cli-service build --production",
+    "log": "rimraf CHANGELOG.md & conventional-changelog -p angular -i CHANGELOG.md -s",
+    "format": "pnpm run lint:eslint & pnpm run lint:stylelint & pnpm run lint:prettier",
+    "lint:eslint": "eslint --cache --max-warnings 0 \"{packages,configs,src}/**/*.{vue,js}\" --fix",
+    "lint:prettier": "prettier --write \"{packages,configs,src}/**/*.{js,json,css,less,scss,vue,html,md}\"",
+    "lint:stylelint": "stylelint \"**/*.{vue,css,scss}\" --fix --cache --cache-location node_modules/.cache/stylelint/",
+    "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
+    "prepare": "husky install",
+    "reinstall": "rimraf pnpm-lock.yaml && rimraf node_modules && pnpm run bootstrap",
+    "deploy": "bash deploy.sh"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.1.2",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
+    "ant-design-vue": "^1.7.8",
+    "axios": "^0.21.0",
+    "codemirror": "^5.49.2",
+    "echarts": "^4.2.1",
+    "moment": "^2.29.0",
+    "normalize.css": "^8.0.1",
+    "vue-splitpane": "^1.0.6"
+  },
+  "devDependencies": {
+    "@lucifinil/config-babel": "^0.0.1",
+    "@lucifinil/config-css-preprocess": "^0.0.1",
+    "@lucifinil/config-lint": "^0.0.1",
+    "@lucifinil/config-vue": "^1.0.0",
+    "@vue/cli-service": "~4.5.18",
+    "babel-loader": "^8.1.0",
+    "happypack": "^5.0.1",
+    "husky": "^7.0.4",
+    "js-cookie": "^2.2.1",
+    "lodash": "^4.17.21",
+    "node-sass": "7.0.3",
+    "nprogress": "^0.2.0",
+    "qs": "^6.10.5",
+    "rimraf": "^5.0.1",
+    "sass-loader": "^10.0.2",
+    "turbo": "^1.10.7",
+    "unbuild": "^2.0.0",
+    "vue": "^2.7.14",
+    "vue-router": "^3.6.5",
+    "vuex": "^3.5.1"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "packageManager": "pnpm@7.1.0"
+}
