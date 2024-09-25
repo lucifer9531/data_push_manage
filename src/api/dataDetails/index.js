@@ -12,14 +12,6 @@ export const exportResultShowExcel = (data) => {
   });
 };
 
-export const downCcpDataTemplate = () => {
-  return request({
-    url: '/push_engine/pushRecord/downCcpDataTemplate',
-    method: 'GET',
-    responseType: 'blob',
-  });
-};
-
 export const uploadCcpData = (data) => {
   return request({
     url: '/push_engine/pushRecord/uploadCcpData',

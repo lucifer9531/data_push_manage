@@ -1,13 +1,5 @@
 import request from '@/utils/request';
 
-export function downScriptTpl() {
-  return request({
-    url: '/push_engine/pushStrategy/downPushStrategyTemplate',
-    method: 'GET',
-    responseType: 'blob',
-  });
-}
-
 export function getInterfaceData() {
   return request({
     url: '/push_engine/pushInterface/selectSourceDown',

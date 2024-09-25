@@ -8,14 +8,6 @@ export function checkTargetName(params) {
   });
 }
 
-export function downScriptTpl() {
-  return request({
-    url: '/push_engine/pushTarget/downPushTemplate',
-    method: 'GET',
-    responseType: 'blob',
-  });
-}
-
 export function add(data) {
   return request({
     url: '/push_engine/pushTarget/insertPushTarget',
