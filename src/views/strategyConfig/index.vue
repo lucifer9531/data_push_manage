@@ -19,6 +19,7 @@
       :pagination="false"
       :row-key="(row) => row.strategyId"
       :row-selection="{
+        columnWidth: 40,
         selectedRowKeys: crud.selectedRowKeys,
         onChange: crud.selectionChangeHandler,
       }"

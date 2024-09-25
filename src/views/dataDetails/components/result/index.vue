@@ -27,7 +27,7 @@
       :loading="crud.loading"
       :pagination="false"
       :row-key="(row) => row.id"
-      :row-selection="{ selectedRowKeys, onChange: selectionChangeHandler }"
+      :row-selection="{ selectedRowKeys, columnWidth: 40, onChange: selectionChangeHandler }"
       :scroll="{ x: 1200, y: tableHeight }"
       size="small"
       style="width: 100%; margin-top: 10px"
@@ -87,7 +87,7 @@
           { title: '目标名称', width: 300, dataIndex: 'targetName', ellipsis: true },
           {
             title: '推送状态',
-            width: '90px',
+            width: 90,
             dataIndex: 'pushStatus',
             ellipsis: true,
             customRender: (value) => {
@@ -96,7 +96,7 @@
           },
           {
             title: '类型',
-            width: '90px',
+            width: 90,
             dataIndex: 'pushType',
             ellipsis: true,
             customRender: (value) => {
@@ -107,7 +107,7 @@
             title: '推送时间',
             dataIndex: 'pushTime',
             ellipsis: true,
-            width: '180px',
+            width: 180,
             customRender: (value) => {
               return moment(value).format('YYYY-MM-DD HH:mm:ss') || '--';
             },
@@ -116,7 +116,7 @@
             title: '接收时间',
             dataIndex: 'sourceReceiveTime',
             ellipsis: true,
-            width: '180px',
+            width: 180,
             customRender: (value) => {
               return moment(value).format('YYYY-MM-DD HH:mm:ss') || '--';
             },
@@ -124,9 +124,8 @@
           { title: '说明', dataIndex: 'remark', ellipsis: true },
           {
             title: '操作',
-            width: '60px',
+            width: 60,
             scopedSlots: { customRender: 'operation' },
-            fixed: 'right',
           },
         ]),
         tableHeight: 0,

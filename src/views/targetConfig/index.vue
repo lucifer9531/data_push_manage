@@ -18,7 +18,7 @@
       :loading="crud.loading"
       :pagination="false"
       :row-key="(row) => row.targetId"
-      :row-selection="{ onChange: crud.selectionChangeHandler }"
+      :row-selection="{ columnWidth: 40, onChange: crud.selectionChangeHandler }"
       size="small"
       style="width: 100%"
     >
