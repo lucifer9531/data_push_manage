@@ -1,71 +1,112 @@
 <template>
   <div style="margin-top: 8px">
     <div class="header">
-      <a-input
+      <a-input-search
         v-model="query.name"
-        placeholder="接口名称或编码"
-        style="width: 150px; margin-right: 10px"
+        placeholder="请输入名称或编码"
+        style="width: 240px; margin-top: -10px; margin-right: 10px"
+        @search="search"
       />
-      <a-button class="mr10" type="primary" @click="search"> 查询 </a-button>
-      <a-button type="primary" @click="toAdd"> 添加 </a-button>
+      <crudOperation />
     </div>
-    <a-collapse v-if="data.length" accordion @change="changeCollapse">
-      <a-collapse-panel
-        v-for="item in data"
-        :key="item.code"
-        :header="`${item.code}(${item.info})`"
-      >
-        <a-form-model :label-col="labelCol" :model="form" :wrapper-col="wrapperCol">
-          <a-form-model-item label="推送数据">
-            <a-input v-model="form.info" disabled />
-          </a-form-model-item>
-          <a-form-model-item label="接口编码">
-            <a-input v-model="form.code" disabled />
-          </a-form-model-item>
-          <a-form-model-item label="接口名称">
-            <a-input v-model="form.name" disabled />
-          </a-form-model-item>
-          <a-form-model-item label="消息内容格式">
-            <a-textarea v-model="form.format" :auto-size="{ maxRows: 12 }" />
-            <a-button style="margin-top: 5px; float: right" type="primary" @click="save">
-              保存
-            </a-button>
-          </a-form-model-item>
-        </a-form-model>
-        <a-button slot="extra" size="small" @click="handleClick($event, item)">删除</a-button>
-      </a-collapse-panel>
-    </a-collapse>
-    <a-empty v-else />
+    <div class="line"></div>
+    <a-table
+      ref="table"
+      :columns="columns"
+      :data-source="paginatedData"
+      :loading="crud.loading"
+      :pagination="false"
+      :row-key="(row) => row.interfaceId"
+      size="small"
+      style="width: 100%"
+    >
+      <template slot="operation" slot-scope="scope">
+        <udOperation :data="scope" />
+      </template>
+    </a-table>
+    <a-pagination
+      :current="page.page"
+      :page-size.sync="page.size"
+      :show-total="(total) => `共${total}条`"
+      :total="page.total"
+      class="ant-table-pagination pagination"
+      show-quick-jumper
+      show-size-changer
+      @change="pageChangeHandler"
+      @showSizeChange="sizeChangeHandler"
+    />
     <e-form ref="eForm" />
   </div>
 </template>
 
 <script>
-  import {
-    deletePushInterface,
-    editPushInterface,
-    selectPushInterfaceById,
-  } from '@/api/dataConfig';
   import eForm from './form.vue';
+  import udOperation from '@crud/UD.operation.vue';
+  import CRUD, { crud, presenter } from '@crud/crud';
+  import crudDataConfig from '@/api/dataConfig';
+  import crudOperation from '@crud/CRUD.operation.vue';
+  import { buildDeletePayload } from './data';
   export default {
     name: 'PushData',
-    components: { eForm },
+    components: { crudOperation, udOperation, eForm },
+    mixins: [presenter(), crud()],
     props: {
       interfaceId: {
         type: String,
         default: '0',
       },
     },
+    cruds() {
+      return CRUD({
+        title: '接口',
+        url: '/push_engine/pushInterface/selectPushInterfaceById',
+        crudMethod: { ...crudDataConfig, buildDeletePayload },
+        idField: 'interfaceId',
+        queryOnPresenterCreated: false,
+        isBuildDeletePayload: true,
+      });
+    },
     data() {
       return {
-        data: [],
-        labelCol: { span: 4 },
-        wrapperCol: { span: 14 },
-        form: {},
+        columns: Object.freeze([
+          {
+            title: '序号',
+            width: 60,
+            ellipsis: true,
+            customRender: (value, row, index) => {
+              return (this.page.page - 1) * this.page.size + index + 1;
+            },
+          },
+          {
+            title: '配置名称',
+            ellipsis: true,
+            customRender: (_, row) => {
+              return `${row.code}(${row.info})`;
+            },
+          },
+          {
+            title: '操作',
+            width: 60,
+            scopedSlots: { customRender: 'operation' },
+            fixed: 'right',
+          },
+        ]),
         query: {
           name: '',
         },
+        page: {
+          page: 1,
+          size: 10,
+          total: 0,
+        },
       };
+    },
+    computed: {
+      paginatedData() {
+        const start = (this.page.page - 1) * this.page.size;
+        const end = start + this.page.size;
+        return this.crud.data.slice(start, end);
+      },
     },
     watch: {
       interfaceId: {
@@ -76,53 +117,37 @@
         immediate: true,
       },
     },
+    created() {
+      this.crud.optShow = {
+        add: true,
+        reset: false,
+        edit: false,
+        del: false,
+        download: false,
+      };
+    },
     mounted() {
       this.selectPushInterfaceById();
     },
     methods: {
-      handleClick(event, data) {
-        event.stopPropagation();
-        this.$confirm({
-          title: '提示',
-          content: `确认删除选中的接口吗?`,
-          centered: true,
-          onOk: () => {
-            this.deletePushInterface(data);
-          },
-          cancel: () => {},
-        });
+      [CRUD.HOOK.afterRefresh]() {
+        this.page.total = this.crud.data.length;
       },
-      async deletePushInterface(data) {
-        const { interfaceId, code, name } = data;
-        await deletePushInterface({
-          name,
-          interfaceId,
-          interfaceCodes: code,
-        });
-        await this.search();
+      pageChangeHandler(page, size) {
+        this.page.page = page;
+        this.page.size = size;
+      },
+      sizeChangeHandler(_, size) {
+        this.page.size = size;
+        this.page.page = 1;
       },
       async selectPushInterfaceById(interfaceTypeId = '0', name = '') {
-        this.data = [];
-        const { data } = await selectPushInterfaceById({ interfaceTypeId, name });
-        this.data = data;
-      },
-      changeCollapse(val) {
-        this.form = this.data.find((item) => item.code === val) || {};
-      },
-      async save() {
-        try {
-          await editPushInterface(this.form);
-          this.$message.success('修改成功');
-          await this.search();
-        } catch (err) {
-          throw new Error(err);
-        }
+        this.crud.query.interfaceTypeId = interfaceTypeId;
+        this.crud.query.name = name;
+        this.crud.toQuery();
       },
       search() {
         this.selectPushInterfaceById(this.interfaceId || '0', this.query.name);
-      },
-      toAdd() {
-        this.$refs.eForm.visible = true;
       },
     },
   };
@@ -131,7 +156,23 @@
 <style lang="scss" scoped>
   .header {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
     margin-bottom: 10px;
+  }
+
+  .line {
+    width: calc(100% + 10px);
+    height: 1px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    margin-left: -10px;
+    background: #e2e5eb;
+  }
+
+  .pagination {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
   }
 </style>

@@ -47,7 +47,7 @@ export function selectPushInterfaceById(data) {
   });
 }
 
-export function editPushInterface(data) {
+export function edit(data) {
   return request({
     url: '/push_engine/pushInterface/editPushInterface',
     method: 'POST',
@@ -70,7 +70,7 @@ export function checkInterfaceCode(params) {
   });
 }
 
-export function addPushInterface(data) {
+export function add(data) {
   return request({
     url: '/push_engine/pushInterface/addPushInterface',
     method: 'POST',
@@ -78,10 +78,12 @@ export function addPushInterface(data) {
   });
 }
 
-export function deletePushInterface(data) {
+export function del(data) {
   return request({
     url: '/push_engine/pushInterface/deletePushInterface',
     method: 'POST',
     data,
   });
 }
+
+export default { add, edit, del };

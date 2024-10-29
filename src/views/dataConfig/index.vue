@@ -96,13 +96,16 @@
 
     .left {
       width: 240px;
-      height: 100%;
-      margin-top: 10px;
+      height: calc(100vh - 70px);
+      margin-top: 50px;
       padding-right: 10px;
+      border-top: 1px solid #e2e5eb;
+      border-right: 1px solid #e2e5eb;
     }
 
     .right {
       flex: 1;
+      margin-left: 10px;
     }
   }
 </style>
