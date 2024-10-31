@@ -126,6 +126,11 @@
         this.form.name = beanName;
         this.form.format = format;
       },
+      [CRUD.HOOK.beforeToAdd]() {
+        for (const _key in this.form) {
+          !Object.hasOwnProperty.call(defaultForm, _key) && delete this.form[_key];
+        }
+      },
       [CRUD.HOOK.beforeSubmit]() {
         this.form.interfaceTypeId = this.$parent.interfaceId || '0';
       },

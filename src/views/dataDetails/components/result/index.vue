@@ -30,7 +30,7 @@
       :row-selection="{ selectedRowKeys, columnWidth: 40, onChange: selectionChangeHandler }"
       :scroll="{ x: 1200 }"
       size="small"
-      style="width: 100%; height: calc(100vh - 270px); margin-top: 10px; overflow-y: auto"
+      style="width: 100%; height: calc(100vh - 170px); margin-top: 10px; overflow-y: auto"
     >
       <template slot="operation" slot-scope="scope">
         <a class="grey mr10" @click.stop="toInfo(scope)">
