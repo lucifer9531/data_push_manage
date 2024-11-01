@@ -130,11 +130,15 @@
         for (const _key in this.form) {
           !Object.hasOwnProperty.call(defaultForm, _key) && delete this.form[_key];
         }
+        this.form.info = undefined;
       },
       [CRUD.HOOK.beforeSubmit]() {
         this.form.interfaceTypeId = this.$parent.interfaceId || '0';
       },
       [CRUD.HOOK.afterSubmit]() {
+        this.form.info = undefined;
+      },
+      [CRUD.HOOK.afterAddCancel]() {
         this.form.info = undefined;
       },
     },
