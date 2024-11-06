@@ -76,13 +76,7 @@
   import _ from 'lodash';
   import CRUD, { form } from '@crud/crud';
 
-  const defaultForm = {
-    code: '',
-    format: '',
-    info: undefined,
-    interfaceTypeId: '',
-    name: '',
-  };
+  const defaultForm = {};
 
   export default {
     name: 'Form',
@@ -130,16 +124,9 @@
         for (const _key in this.form) {
           !Object.hasOwnProperty.call(defaultForm, _key) && delete this.form[_key];
         }
-        this.form.info = undefined;
       },
       [CRUD.HOOK.beforeSubmit]() {
         this.form.interfaceTypeId = this.$parent.interfaceId || '0';
-      },
-      [CRUD.HOOK.afterSubmit]() {
-        this.form.info = undefined;
-      },
-      [CRUD.HOOK.afterAddCancel]() {
-        this.form.info = undefined;
       },
     },
   };
