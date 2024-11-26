@@ -190,18 +190,18 @@
       },
       async exportExcel() {
         const item = {
-          pushStatus: '',
-          sessionId: null,
-          interfaceId: null,
-          targetId: null,
-          startTime: null,
-          endTime: null,
-          pushRecordIds: '',
+          pushStatus: this.crud.query.pushStatus || '',
+          sessionId: this.crud.query.sessionId || null,
+          interfaceId: this.crud.query.interfaceId || null,
+          targetId: this.crud.query.targetId || null,
+          startTime: this.crud.query.startTime || null,
+          endTime: this.crud.query.endTime || null,
+          pushRecordIds: this.selectedRowKeys.join(',') || '',
         };
         const formData = new FormData();
         formData.append('item', JSON.stringify(item));
         const data = await exportResultShowExcel(formData);
-        downloadFile(data, '推送结果', 'xlsx');
+        downloadFile(data, '推送结果', 'xls');
       },
     },
   };

@@ -36,7 +36,6 @@
         formData.append('file', options.file);
         try {
           const { status, msg } = await uploadCcpData(formData);
-          console.log(status, msg);
           if (status !== 0) {
             options.onError(new Error(msg));
             this.$message.error(msg);

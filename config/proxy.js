@@ -7,7 +7,8 @@
  * For roadwayGeology, please see
  */
 
-const baseUrl = 'http://221.194.132.82:61001';
+// const baseUrl = 'http://221.194.132.82:61001';
+const baseUrl = 'http://60.10.135.211/';
 
 module.exports = {
   '/push_engine': {
